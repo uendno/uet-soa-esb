@@ -4,12 +4,12 @@ Requirements:
 - node.js
 - Anypoint Studio
 
-Run:
+Runing:
 - Import source code in the folder "esb/hello" to anypoint studio and run as an Anypoint Application
 - Go to the folder "consumer" and run the app using "npm start". The same with the "hello" and "downcase" app
 - Go to localhost:3000/{YOUR_NAME} and watch the response
 
-Explain:
+Explaination:
 - "consumer" app is the api consumer
 - "hello" app attachs "Hello, " to your string
 - "downcase" app converts your string to lower case
