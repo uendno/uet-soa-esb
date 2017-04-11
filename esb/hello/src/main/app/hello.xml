@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <http:listener-config name="Endpoint" host="localhost" port="8081" doc:name="HTTP Listener Configuration"/>
+    <http:request-config name="HelloApp" host="localhost" port="3001" doc:name="HTTP Request Configuration"/>
+    <http:request-config name="DowncaseApp" host="localhost" port="3002" doc:name="HTTP Request Configuration"/>
+    <flow name="helloFlow">
+        <http:listener config-ref="Endpoint" path="/hello/{name}" doc:name="HTTP"/>
+        <logger message="#[message.inboundProperties.'http.uri.params'.name]" level="INFO" doc:name="Logger"/>
+        <http:request config-ref="HelloApp" path="/" method="GET" target="#[payload]" followRedirects="false" doc:name="HTTP">
+            <http:request-builder>
+                <http:query-param paramName="name" value="#[message.inboundProperties.'http.uri.params'.name]"/>
+            </http:request-builder>
+        </http:request>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <http:request config-ref="DowncaseApp" path="/" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:query-param paramName="string" value="#[message.payloadAs(java.lang.String)]"/>
+            </http:request-builder>
+        </http:request>
+    </flow>
+</mule>
